@@ -16,4 +16,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .password("{noop}12345678")
                 .roles("USER");
     }
+    
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.httpBasic().and().authorizeRequests()
+				.antMatchers("/download/**")
+				.permitAll();
+//				
+
+		http.csrf().disable();
+	}
 }
