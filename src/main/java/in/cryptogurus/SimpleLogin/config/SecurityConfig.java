@@ -8,22 +8,23 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("abc")
-                .password("{noop}12345678")
-                .roles("USER");
-    }
-    
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.httpBasic().and().authorizeRequests()
-				.antMatchers("/download/**")
-				.permitAll();
-//				
 
-		http.csrf().disable();
+	@Override
+	public void configure(HttpSecurity http) throws Exception {
+		http
+				.authorizeRequests()
+				.anyRequest().authenticated()
+				.and()
+				.formLogin()
+				.and()
+				.httpBasic();
+	}
+
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.inMemoryAuthentication()
+				.withUser("user")
+				.password("{noop}pass") // Spring Security 5 requires specifying the password storage format
+				.roles("USER");
 	}
 }
